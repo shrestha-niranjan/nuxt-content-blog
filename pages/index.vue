@@ -8,9 +8,17 @@
       </h2>
     </div>
 
+    <v-row v-if="!posts.length">
+      <v-col cols="12" class="text-center">
+        <h4>
+          No posts found, by {{ searchQuery }}. <span class="emoji">😅</span>
+        </h4>
+      </v-col>
+    </v-row>
+
     <v-row class="posts-container">
       <v-col cols="12">
-        <div class="filter">
+        <div v-if="posts.length" class="filter">
           <v-select
             v-if="categories.length"
             v-model="category"
@@ -49,7 +57,7 @@
       </v-col>
     </v-row>
 
-    <v-row class="post-pagination">
+    <v-row v-if="posts.length" class="post-pagination">
       <v-col class="text-right" cols="12">
         <v-btn :disabled="page === 1" @click="fetchPrevious">
           <v-icon small>mdi-arrow-left</v-icon>
