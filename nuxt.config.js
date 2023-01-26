@@ -17,7 +17,16 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      {
+        src: 'https://www.googletagmanager.com/gtag/js?id=G-K2J8CPV72E',
+        async: true
+      },
+      {
+        src: 'js/ga.js'
+      }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
