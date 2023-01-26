@@ -1,10 +1,11 @@
 ---
-title: 2. Getting started
+title: 2. Laravel
 description: 'Empower your NuxtJS application with @nuxt/content module: write in a content/ directory and fetch your Markdown, JSON, YAML and CSV files through a MongoDB like API, acting as a Git-based Headless CMS.'
 category: demo
 tags:
   - tutorial
   - blog
+  - laravel
 ---
 
 Tsse. Odio dolores rem et eligendi corrupti aperiam necessitatibus rerum

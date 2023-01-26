@@ -1,10 +1,13 @@
 ---
-title: 1. Getting started
-description: 'Empower your NuxtJS application with @nuxt/content module: write in a content/ directory and fetch your Markdown, JSON, YAML and CSV files through a MongoDB like API, acting as a Git-based Headless CMS.'
+title: 1. Getting started with PHP
+description: 'A popular general-purpose scripting language that is especially suited to web development.
+Fast, flexible and pragmatic, PHP powers everything from your blog to the most popular websites in the world.'
 category: demo
 tags:
-  - tutorial
+  - PHP
   - blog
+  - nuxt
+  - YAML
 ---
 
 Tsse. Odio dolores rem et eligendi corrupti aperiam necessitatibus rerum

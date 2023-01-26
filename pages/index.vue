@@ -22,22 +22,27 @@
         </div>
       </v-col>
 
-      <v-col v-for="post in 4" :key="post" cols="12" md="6">
+      <v-col v-for="post in posts" :key="post.slug" cols="12" md="6">
         <v-card elevation="0">
           <v-card-title>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure,
-            veritatis.
+            {{ post.title }}
           </v-card-title>
 
+          <v-card-subtitle>
+            {{
+              new Intl.DateTimeFormat('en-US', {
+                dateStyle: 'short',
+                timeStyle: 'short'
+              }).format(new Date(post.createdAt))
+            }}
+          </v-card-subtitle>
+
           <v-card-text>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas
-            repudiandae ullam quidem laborum totam repellat dolorem quibusdam
-            voluptatum fugiat exercitationem! Magnam modi natus maxime eligendi
-            consequatur, est eos iure dolorem!
+            <nuxt-content :document="{ body: post.excerpt }" />
           </v-card-text>
 
           <v-card-actions>
-            <v-btn text to="/1">Read More</v-btn>
+            <v-btn text :to="post.path">Read More</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -45,12 +50,12 @@
 
     <v-row class="post-pagination">
       <v-col class="text-right" cols="12">
-        <v-btn>
+        <v-btn :disabled="page === 1" @click="fetchPrevious">
           <v-icon small>mdi-arrow-left</v-icon>
           Previous
         </v-btn>
 
-        <v-btn>
+        <v-btn :disabled="!nextPage" @click="fetchNext">
           Next
           <v-icon small>mdi-arrow-right</v-icon>
         </v-btn>
@@ -63,9 +68,51 @@
 export default {
   name: 'Homepage',
   layout: 'DefaultLayout',
+  async asyncData ({ $content }) {
+    const limit = 5
+    const page = 1
+
+    const fetchedPosts = await $content()
+      .limit(limit)
+      .sortBy('createdAt', 'desc')
+      .skip((limit - 1) * (page - 1))
+      .fetch()
+
+    const nextPage = fetchedPosts.length === limit
+    const posts = nextPage ? fetchedPosts.slice(0, -1) : fetchedPosts
+
+    return {
+      page,
+      limit,
+      posts,
+      nextPage
+    }
+  },
   data: () => ({
     category: 'all'
-  })
+  }),
+  methods: {
+    async fetchNext () {
+      this.page += 1
+      await this.fetchPosts()
+    },
+    async fetchPrevious () {
+      this.page -= 1
+      await this.fetchPosts()
+    },
+    async fetchPosts () {
+      const fetchedPosts = await this.$content()
+        .limit(this.limit)
+        .sortBy('createdAt', 'desc')
+        .skip((this.limit - 1) * (this.page - 1))
+        .fetch()
+
+      this.nextPage = fetchedPosts.length === this.limit
+      const posts = this.nextPage ? fetchedPosts.slice(0, -1) : fetchedPosts
+
+      this.posts = posts
+    }
+  }
 }
 </script>
 
