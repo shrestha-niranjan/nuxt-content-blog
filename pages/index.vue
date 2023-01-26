@@ -98,6 +98,8 @@ export default {
   },
   watch: {
     searchQuery (newVal) {
+      this.page = 1
+
       this.fetchPosts(newVal)
     }
   },
