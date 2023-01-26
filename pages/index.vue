@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="intro mt-5 mb-8">
-      <h1 class="text-h1">Niranjan's Codes Blog</h1>
+      <h1 class="text-h2">Niranjan's Codes Blog</h1>
 
       <h2 class="mt-2">
         Let's learn together && grow together <span class="emoji">🚀🚀</span>
@@ -12,12 +12,13 @@
       <v-col cols="12">
         <div class="filter">
           <v-select
+            v-if="categories.length"
             v-model="category"
+            :items="categories"
             style="width: 100px"
             outlined
             dense
             hide-details="auto"
-            :items="['all', 'coding']"
           />
         </div>
       </v-col>
@@ -89,18 +90,33 @@ export default {
     }
   },
   data: () => ({
-    category: 'all'
+    category: 'all',
+    categories: []
   }),
+  fetch () {
+    this.$content()
+      .only(['category'])
+      .fetch()
+      .then(categories => {
+        const payload = Array.from(new Set(categories.map(c => c.category)))
+        this.categories = ['all', ...payload]
+      })
+  },
   computed: {
     searchQuery () {
       return this.$store.state.query
     }
   },
   watch: {
-    searchQuery (newVal) {
+    async searchQuery (newVal) {
       this.page = 1
 
-      this.fetchPosts(newVal)
+      await this.fetchPosts(newVal)
+    },
+
+    async category () {
+      this.page = 1
+      await this.fetchPosts(this.searchQuery)
     }
   },
   methods: {
@@ -113,9 +129,14 @@ export default {
       await this.fetchPosts()
     },
     async fetchPosts (query = '') {
-      const fetchedPosts = await this.$content()
+      let baseFetch = await this.$content()
         .limit(this.limit)
         .sortBy('createdAt', 'desc')
+
+      if (this.category !== 'all') {
+        baseFetch = baseFetch.where({ category: this.category })
+      }
+      const fetchedPosts = await baseFetch
         .search(query)
         .skip((this.limit - 1) * (this.page - 1))
         .fetch()
