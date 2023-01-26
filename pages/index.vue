@@ -5,7 +5,10 @@
 </template>
 
 <script>
-export default {}
+export default {
+  name: 'Homepage',
+  layout: 'DefaultLayout'
+}
 </script>
 
 <style lang="scss" scoped></style>
